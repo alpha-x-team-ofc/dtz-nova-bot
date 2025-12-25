@@ -1,9 +1,11 @@
 {
   "name": "dtz-nova-bot",
   "version": "1.0.0",
+  "description": "WhatsApp Bot with Movie Commands",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.5.0",
@@ -11,6 +13,7 @@
     "fs-extra": "^11.2.0",
     "axios": "^1.6.2",
     "qrcode": "^1.5.3",
+    "moment-timezone": "^0.5.43",
     "cors": "^2.8.5"
   }
 }
