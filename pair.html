@@ -1,1 +1,411 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect WhatsApp - DTZ NOVA X MD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section, .qr-section {
+            padding: 25px;
+            border-radius: 15px;
+            background: #f8f9fa;
+        }
+        
+        .input-section h3, .qr-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        #qrImage {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+        }
+        
+        .instructions h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .back-btn a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-btn a:hover {
+            text-decoration: underline;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🤖</div>
+            <h1>Connect WhatsApp</h1>
+            <p class="subtitle">Scan QR code to connect your WhatsApp number</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <h3>🔢 Enter Your Number</h3>
+                <div class="input-group">
+                    <label for="number">WhatsApp Number (with country code):</label>
+                    <input 
+                        type="text" 
+                        id="number" 
+                        placeholder="94712345678" 
+                        value="947"
+                        maxlength="12"
+                    >
+                    <small style="color: #666; margin-top: 5px; display: block;">
+                        Enter without + sign (Example: 94712345678)
+                    </small>
+                </div>
+                
+                <button id="connectBtn" class="btn" onclick="connectWhatsApp()">
+                    <span>🔗 Connect WhatsApp</span>
+                </button>
+                
+                <div id="status" class="status"></div>
+            </div>
+            
+            <div class="qr-section">
+                <h3>📱 QR Code</h3>
+                <div class="qr-container">
+                    <img id="qrImage" src="" alt="QR Code">
+                    <div id="qrMessage" style="color: #666; margin: 20px 0;">
+                        Enter your number and click "Connect WhatsApp" to generate QR code
+                    </div>
+                </div>
+                
+                <div id="connectionStatus" class="status info" style="display: none;">
+                    ⏳ Waiting for QR scan...
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h4>📝 How to Connect:</h4>
+            <ol>
+                <li>Enter your WhatsApp number with country code (without +)</li>
+                <li>Click "Connect WhatsApp" button</li>
+                <li>Scan the QR code with your WhatsApp</li>
+                <li>Wait for connection confirmation</li>
+                <li>Start using commands like .movie, .drama, .song</li>
+            </ol>
+        </div>
+        
+        <div class="back-btn">
+            <a href="/">
+                ← Back to Home
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        let checkInterval = null;
+        let currentNumber = '';
+        
+        async function connectWhatsApp() {
+            const numberInput = document.getElementById('number');
+            const btn = document.getElementById('connectBtn');
+            const statusDiv = document.getElementById('status');
+            const qrImage = document.getElementById('qrImage');
+            const qrMessage = document.getElementById('qrMessage');
+            const connectionStatus = document.getElementById('connectionStatus');
+            
+            const number = numberInput.value.trim();
+            
+            if (!number || number.length < 10) {
+                showStatus('Please enter a valid number (at least 10 digits)', 'error');
+                return;
+            }
+            
+            // Save number
+            currentNumber = number.replace(/\D/g, '');
+            numberInput.value = currentNumber;
+            
+            // Clear previous
+            qrImage.style.display = 'none';
+            qrMessage.textContent = 'Generating QR code...';
+            connectionStatus.style.display = 'none';
+            
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> Connecting...';
+            
+            try {
+                // Send request to connect
+                const response = await fetch('/api/whatsapp/connect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ number: currentNumber })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.qr) {
+                        // Show QR code
+                        qrImage.src = `/api/whatsapp/qr/${currentNumber}`;
+                        qrImage.style.display = 'block';
+                        qrMessage.textContent = 'Scan this QR code with WhatsApp';
+                        connectionStatus.style.display = 'block';
+                        connectionStatus.textContent = '⏳ Waiting for QR scan...';
+                        
+                        // Start checking connection status
+                        startCheckingStatus(currentNumber);
+                    } else if (data.connected) {
+                        showStatus('✅ Already connected to WhatsApp!', 'success');
+                        qrMessage.textContent = 'Your WhatsApp is already connected';
+                    }
+                } else {
+                    showStatus('❌ ' + (data.message || data.error || 'Connection failed'), 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Connection error: ' + error.message, 'error');
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.innerHTML = '<span>🔗 Connect WhatsApp</span>';
+            }
+        }
+        
+        function startCheckingStatus(number) {
+            if (checkInterval) clearInterval(checkInterval);
+            
+            checkInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/whatsapp/status/${number}`);
+                    const data = await response.json();
+                    
+                    if (data.connected) {
+                        clearInterval(checkInterval);
+                        document.getElementById('connectionStatus').className = 'status success';
+                        document.getElementById('connectionStatus').innerHTML = `
+                            ✅ Connected successfully!<br>
+                            <small>You can now use commands like .movie, .drama, .song</small>
+                        `;
+                        document.getElementById('connectionStatus').style.display = 'block';
+                    }
+                } catch (error) {
+                    console.log('Status check error:', error);
+                }
+            }, 3000); // Check every 3 seconds
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Auto-format number input
+        document.getElementById('number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 12) value = value.slice(0, 12);
+            e.target.value = value;
+        });
+        
+        // Enter key to connect
+        document.getElementById('number').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                connectWhatsApp();
+            }
+        });
+    </script>
+</body>
+</html>
